@@ -1,0 +1,6 @@
+results/*
+models/*
+data/
+*~
+*.pyc
+*.pyo
