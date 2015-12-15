@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from sklearn import linear_model as sklm
 from sklearn import tree as sktree
 from sklearn import cross_validation as cv
@@ -17,7 +18,7 @@ import pprint as pp
 
 def basic_train_test_split(np_data, y):
     logger = logging.getLogger('model-learner.model_building.basic_train_test_split')
-    X_train, X_test, y_train, y_test = cv.train_test_split(np_data, y, test_size=0.30, random_state=33)
+    X_train, X_test, y_train, y_test = cv.train_test_split(np_data, y, test_size=0.5, random_state=0)
 
     return X_train, X_test, y_train, y_test
 
@@ -104,8 +105,34 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     best_parameters = dict();  
     best_parameters = gd_clf.best_estimator_.get_params()  
     print best_parameters
+
+    # plot gains chart on testing dataset
+    plot_gains_chart(model, X_test, y_test, label)
        
     return classifiers
+
+def plot_gains_chart(model, X_test, y_test, label):
+    y_proba = model.predict_proba(X_test)
+    # proba_w = [x[0] for x in y_proba]
+    proba_b = [x[1] for x in y_proba]
+    make_gains_chart(proba_b, y_test, 1)
+
+def make_gains_chart(y_proba, y_test, step):
+    ind = argsort(y_proba)[::-1]
+    plot_data = [0]
+    for i in range(step, 100 + step, step):
+        s = 0
+        for i in range(len(y_test)*i / 100):
+            s += y_test[ind[i]]
+        plot_data.append(s * 100.0 / sum(y_test))
+
+    plt.plot(range(0, 100+step, step), plot_data)
+    plt.plot(range(0, 100+step, step), [i for i in range(0, 100+step, step)], '.')
+    plt.axis([0, 100, 0, 100])
+    plt.xlabel(u"占总人群百分比(%)")
+    plt.ylabel(u"占违约人群百分比(%)")
+
+    plt.show()
 
 def cost_function_ks(ground_truth, predictions):
     # print predictions.shape

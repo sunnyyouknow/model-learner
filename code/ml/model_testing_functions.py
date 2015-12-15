@@ -27,9 +27,13 @@ def applyModel(model_file, data, RESULTS_OUTPUT_DIR, test_pickle_file):
     # run the model on the testing dataset
     output = clf.predict_proba(data)
 
+    sum = 0
     print (output.shape)
     for x in xrange(1,len(output)):
         print 'prob %d: ' %x
         pp.pprint(output[x])
+        if output[x][0] < 0.5:
+            sum = sum + 1
+    print ('error rata: %d / %d') %(sum, len(data))
 
     return output, clf
