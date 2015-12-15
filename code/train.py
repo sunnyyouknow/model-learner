@@ -14,21 +14,27 @@ import pprint as pp
 import settings
 
 #Setup the logger
-print '%s' %settings.LOGGING_FILE
-utils.setLog(settings.LOGGING_FILE)
-logger=logging.getLogger('Master')
+print '%s' %settings.logging_file_training
+utils.setLog(settings.logging_file_training)
+logger=logging.getLogger('model-learner.train')
 
 #Log start of Full process
 utils.logInfoTime(logger, 'Started')
 
 # run hbc load data script
-logger.info('--------------------------------- Data Load -----------------------------------')
+logger.info('==> Load Data.')
 utils.logInfoTime(logger, 'Started Data Load')
-data_np_array, y_np_array = data_load.pklTrainFile(settings.INPUT_DIR, settings.train_file_name_white, settings.train_file_name_black, settings.RESULTS_OUTPUT_DIR)
+data_np_array, y_np_array = data_load.pkl_train_file(settings.INPUT_DIR, settings.train_file_name_white, settings.train_file_name_black, settings.RESULTS_OUTPUT_DIR)
 utils.logInfoTime(logger, 'Finished Data Load')
 
+# preprocessing featurizer sample data
+logger.info('==> Preprocessing feature data.')
+utils.logInfoTime(logger, 'Started Preprocessing')
+
+utils.logInfoTime(logger, 'Finished Preprocessing')
+
 # build models
-logger.info('--------------------------------- Model Building -----------------------------------')
+logger.info('==> Build Model.')
 utils.logInfoTime(logger, 'Started Model Building')
 model_building.modelsBuild(data_np_array, y_np_array, logger)
 utils.logInfoTime(logger, 'Finished Model Building')

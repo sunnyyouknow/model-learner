@@ -16,23 +16,30 @@ from sklearn.externals import joblib
 import settings
 
 def modelsBuild(np_data, y, logger):
-    #specify details of logging (So logs outputs exactly which function fed info into log)
-    logger = logging.getLogger('Master.Models_Build')
-
-    np_data_fs = np_data
+    logger = logging.getLogger('model-learner.model_building')   
         
-    logger.info('--------------------------------- Modelling - Create Test and Training Sets -----------------------------------')
-    
-    X_train,y_train,X_test,y_test = modfuncs.kfoldTrainingSet(np_data_fs,y,n_folds=3)
-    
-    # pickle the test dataset
-    joblib.dump({'X_test':X_test,'y_test':y_test},settings.MODELS_OUTPUT_DIR + '/test_data.pkl')  
-    
-    logger.info('--------------------------------- Modelling - Basic Model Building -----------------------------------')
     classifiers = {} 
+
+    # split samples into training set and testing set
+    logger.info('==> Create Test and Training Sets.')
+    X_train, X_test, y_train, y_test = modfuncs.basic_train_test_split(np_data, y)
+    joblib.dump({'X_test':X_test, 'y_test':y_test}, settings.INPUT_DIR+'/test_data.pkl')  
+    
+    # build models
+    logger.info('==> Building Models.')
+
+    # Grid Search Logistic Regression
+    param_grid = {
+                    'penalty':('l1', 'l2')
+                    ,'C':[0.0001, 0.001, 0.01, 0.1, 1, 10]
+                    ,'fit_intercept':('True', 'False')
+                }
+    if settings.models['Logistic Regression Grid Search']==True:
+        print 'run logistic regression GridSearchCV...'
+        classifiers = modfuncs.logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_test, classifiers, \
+                                'Logistic Regression Grid Search', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True)
  
     # Decision Tree
-    # Dictionary of the sci-kit learn logistic regression parameters
     sklearn_params={
                     'criterion':'entropy'
                     ,'splitter':'best'
@@ -44,10 +51,11 @@ def modelsBuild(np_data, y, logger):
                     ,'max_leaf_nodes':None
                     }
     if settings.models['Decision Tree']==True: 
-        classfiers = modfuncs.decTree(X_train,y_train,X_test,y_test, classifiers,'Decision Tree',settings.RESULTS_OUTPUT_DIR,settings.MODELS_OUTPUT_DIR,pickle=True, **sklearn_params)
+        print 'run decision tree..'
+        classfiers = modfuncs.decision_tree(X_train, y_train, X_test, y_test, classifiers, \
+                                'Decision Tree', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True, **sklearn_params)
     
     # Logistic Regression
-    # Dictionary of the sci-kit learn logistic regression parameters
     sklearn_params={
                     'penalty':'l1'
                     ,'dual':False
@@ -60,10 +68,10 @@ def modelsBuild(np_data, y, logger):
                     }
     if settings.models['Logistic Regression']==True:
         print 'run logistic regression...'
-        classfiers = modfuncs.logReg(X_train,y_train,X_test,y_test, classifiers,'Logistic Regression',settings.RESULTS_OUTPUT_DIR,settings.MODELS_OUTPUT_DIR,pickle=True, **sklearn_params)
+        classfiers = modfuncs.logistic_regression(X_train,y_train,X_test,y_test, classifiers, \
+                                'Logistic Regression', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True, **sklearn_params)
     
     # Random Forest
-    # Dictionary of the sci-kit learn logistic regression parameters
     sklearn_params={
                     'n_estimators':20
                     ,'criterion':'gini'
@@ -74,12 +82,8 @@ def modelsBuild(np_data, y, logger):
                     }
     if settings.models['Random Forest']==True:
         print 'run random forest...'
-        classfiers = modfuncs.randomForest(X_train,y_train,X_test,y_test, classifiers,'Random Forest',settings.RESULTS_OUTPUT_DIR,settings.MODELS_OUTPUT_DIR,pickle=True, **sklearn_params)  
+        classfiers = modfuncs.random_forest(X_train, y_train, X_test, y_test, classifiers, \
+                                'Random Forest', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True, **sklearn_params)  
            
-    # nonProbClassifiers={} # empty dictionary to store the results
-    # logger.info('--------------------------------- Plot ROC Curves -----------------------------------')
-    # modfuncs.plotRocCurve(classifiers, settings.RESULTS_OUTPUT_DIR, nonProbClassifiers)
-    # print 'plot ROC curves...'
-
 if __name__ == "__main__":
-	print ('Please run this script from the machine_learning_master script')
+	print ('Please run this script from the train script')
