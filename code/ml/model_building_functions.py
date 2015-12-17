@@ -113,12 +113,13 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
 
 def plot_gains_chart(model, X_test, y_test, label):
     y_proba = model.predict_proba(X_test)
-    # proba_w = [x[0] for x in y_proba]
+    proba_w = [x[0] for x in y_proba]
     proba_b = [x[1] for x in y_proba]
     make_gains_chart(proba_b, y_test, 1)
 
 def make_gains_chart(y_proba, y_test, step):
-    ind = argsort(y_proba)[::-1]
+    # ind = argsort(y_proba)[::-1]
+    ind = argsort(y_proba)
     plot_data = [0]
     for i in range(step, 100 + step, step):
         s = 0
@@ -145,6 +146,7 @@ def cost_function_ks(ground_truth, predictions):
 
     ind_b = argsort(proba_b)
     ind_w = argsort(proba_w)
+    # ind_w = argsort(proba_w)[::-1]
     plot_data_b = [0]
     plot_data_w = [0]
 
