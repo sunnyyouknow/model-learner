@@ -18,13 +18,13 @@ models = {
           ,'Random Forest Grid Search':False
           ,'SGD':False
          }
-         
+
 # feature_selection=False
 # variable_scaling=False
 
 # Set the files for the model training and scoring
-train_file_name_white = 'data_white_yz_tag_wb'
-train_file_name_black = 'data_black_yz_tag_wb'
+train_file_name_white = 'white_dx_5000_bin.csv'
+train_file_name_black = 'black_dx_1000_bin.csv'
 
 # score_file_name = 'test_data.pkl'
 score_file_name = train_file_name_white
