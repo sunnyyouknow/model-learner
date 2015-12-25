@@ -46,6 +46,9 @@ def score_one_iterm_online(model_path,feature_string):
     logger.info('Start testing: %s', datetime.datetime.now().time().isoformat())
     # transform string to numpy array
     np_data = numpy.fromstring(feature_string, dtype=int, sep=",")
+
+    np_data = np_data.reshape(1,-1)
+    #print  np_data.shape
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
     print score_normalization(300,900,output[0][0])
