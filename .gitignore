@@ -3,4 +3,4 @@ raw_data/
 *.pyc
 *.pyo
 *npy
-*pkl
+
