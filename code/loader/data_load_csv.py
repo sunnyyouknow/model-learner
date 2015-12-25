@@ -65,20 +65,17 @@ def csv_train_file(INPUT_DIR, white_file_name, black_file_name):
     except IOError:
         logger.info ('cannot open file %s from folder %s', file_name, INPUT_DIR)
 
-def csv_score_file(INPUT_DIR, score_file_name, RESULTS_OUTPUT_DIR):
+def csv_score_file(INPUT_DIR, score_file_name):
     logger = logging.getLogger('model-learner.data_load.pkl_score_file')
 
     try:
-        pkl_file = open(INPUT_DIR + score_file_name, 'rb')
-        score_data = pickle.load(pkl_file)
+        score_data = load_csv_file(INPUT_DIR + score_file_name);
 
         # print '----------- testing data -----------'
         # print(score_data.shape)
         # for x in xrange(1,len(score_data)):
         #     print 'white %d: ' %x
         #     pp.pprint(score_data[x])
-
-        pkl_file.close()
 
         logger.info ('==> Data Load Score Samples Completed Successfully')
         print('Data Load Score Samples Completed Successfully')

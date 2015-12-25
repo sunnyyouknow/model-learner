@@ -1,4 +1,4 @@
-# Script to build models on a training dataset 
+# Script to build models on a training dataset
 import sys;
 sys.path.append("loader/")
 sys.path.append("preprocess/")
@@ -8,7 +8,8 @@ sys.path.append("utils/")
 
 import logging
 import data_load
-import model_building   
+import data_load_csv
+import model_building
 import utils
 import pprint as pp
 import settings
@@ -24,7 +25,7 @@ utils.logInfoTime(logger, 'Started')
 # run hbc load data script
 logger.info('==> Load Data.')
 utils.logInfoTime(logger, 'Started Data Load')
-data_np_array, y_np_array = data_load.pkl_train_file(settings.INPUT_DIR, settings.train_file_name_white, settings.train_file_name_black, settings.RESULTS_OUTPUT_DIR)
+data_np_array, y_np_array = data_load_csv.csv_train_file(settings.INPUT_DIR, settings.train_file_name_white, settings.train_file_name_black)
 utils.logInfoTime(logger, 'Finished Data Load')
 
 # preprocessing featurizer sample data
