@@ -24,7 +24,37 @@ def  load_csv_file(file_name):
 
     # create a numpy array with the numeric values for input into scikit-learn
     numpy_array = df.as_matrix()
+
     return  numpy_array
+
+def csv_train_from_one_file(file_name):
+    logger = logging.getLogger('model-learner.data_load.pkl_train_file')
+
+    try:
+        print file_name
+        training_data = load_csv_file(file_name);
+
+        print 'training data:'
+        print(training_data.shape)
+        # for x in xrange(1,len(data_white)):
+        #     print 'white %d: ' %x
+        #     pp.pprint(data_white[x])
+        logger.info ('==> Data Load White and Black Samples Completed Successfully')
+        print('Data Load White and Black Samples Completed Successfully')
+
+        # Merge training samples
+        data_np_array = training_data[:,0:-1]
+        y_np_array = training_data[:,-1]
+        print 'X:'
+        print(data_np_array.shape)
+        print 'y:'
+        print(y_np_array.shape)
+
+        return data_np_array, y_np_array
+
+    except IOError:
+        logger.info ('cannot open file %s', file_name)
+
 
 def csv_train_file(INPUT_DIR, white_file_name, black_file_name):
     logger = logging.getLogger('model-learner.data_load.pkl_train_file')
@@ -51,9 +81,9 @@ def csv_train_file(INPUT_DIR, white_file_name, black_file_name):
         print('Data Load White and Black Samples Completed Successfully')
 
         # Merge training samples
-        data_np_array =  np.concatenate((white_data, black_data))
-        y_p_array = [0] * len(white_data)
-        y_n_array = [1] * len(black_data)
+        data_np_array =  np.concatenate((white_data[:,0:-1], black_data[:,0:-1]))
+        y_p_array = white_data[:,-1];
+        y_n_array = black_data[:,-1];
         y_np_array = np.concatenate((y_p_array, y_n_array))
         print 'X:'
         print(data_np_array.shape)
@@ -70,7 +100,7 @@ def csv_score_file(INPUT_DIR, score_file_name):
 
     try:
         score_data = load_csv_file(INPUT_DIR + score_file_name);
-
+        score_data = score_data[:,0:-1]
         # print '----------- testing data -----------'
         # print(score_data.shape)
         # for x in xrange(1,len(score_data)):
@@ -86,9 +116,9 @@ def csv_score_file(INPUT_DIR, score_file_name):
         logger.info ('cannot open file %s from folder %s', score_file_name, INPUT_DIR)
 
 #for debug
-#csv_train_file("..//data/","white_dx_5000_bin.csv","black_dx_1000_bin.csv");
-#load_csv_file("../data/black_dx_1000_bin.csv")
+#csv_train_file("../../data/","white_dx_5000_bin.csv","black_dx_1000_bin.csv");
+#load_csv_file("../../data/black_dx_1000_bin.csv")
 
 
-if __name__ == "__main__":
-    print ('Please run this script from train and test script')
+#if __name__ == "__main__":
+#    print ('Please run this script from train and test script')

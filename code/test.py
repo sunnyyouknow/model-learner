@@ -28,7 +28,7 @@ logger.info('==> Preprocessing data.')
 
 
 logger.info('==> Apply Data.')
-output,clf = mexec.applyModel(settings.model_pickle_file, data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
+output,clf = mexec.applyModel(settings.MODELS_OUTPUT_DIR +'model_'+ settings.model_pickle_file, data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
 
 logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
 
