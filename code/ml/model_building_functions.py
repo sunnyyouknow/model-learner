@@ -31,35 +31,35 @@ def kfold_training_set_split(np_data, y, n_folds=10):
     # return X_train,y_train,X_test,y_test
 
     return skf
-    
+
 def logistic_regression(X_train, y_train, X_test, y_test, classifiers, label, \
                         RESULTS_OUTPUT_DIR, MODELS_OUTPUT_DIR, pickle=False, **kwargs):
     logger = logging.getLogger('model-learner.model_building.logistic_regression')
-    
+
     model, classifiers = calc_clf_model(sklm.LogisticRegression(**kwargs), X_train, y_train, \
-                                    X_test, y_test, label,classifiers,MODELS_OUTPUT_DIR, pickle=pickle)  
-     
+                                    X_test, y_test, label,classifiers,MODELS_OUTPUT_DIR, pickle=pickle)
+
     logger.info('Started Log Reg 5 model build %s', datetime.datetime.now().time().isoformat())
     logger.info('Model coefficients: %s', pp.pformat(model.coef_))
     logger.info('Model intercept: %s', pp.pformat(model.intercept_))
 
     return classifiers
-    
+
 def random_forest(X_train, y_train, X_test, y_test, classifiers, \
                  label, RESULTS_OUTPUT_DIR, MODELS_OUTPUT_DIR, pickle=False, **kwargs):
     logger = logging.getLogger('model-learner.model_building.random_forest')
-    
+
     model, classifiers = calc_clf_model(en.RandomForestClassifier(**kwargs), X_train, y_train, X_test, y_test, \
-                                        label,classifiers,MODELS_OUTPUT_DIR, pickle=pickle)  
-    
+                                        label,classifiers,MODELS_OUTPUT_DIR, pickle=pickle)
+
     return classifiers
-    
+
 def decision_tree(X_train, y_train, X_test, y_test, classifiers, label, \
                 RESULTS_OUTPUT_DIR, MODELS_OUTPUT_DIR, pickle=False, **kwargs):
     logger = logging.getLogger('model-learner.model_building.decision_tree')
 
     model, classifiers = calc_clf_model(sktree.DecisionTreeClassifier(**kwargs), X_train, y_train, \
-                                    X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle=pickle)    
+                                    X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle=pickle)
 
     return classifiers
 
@@ -73,7 +73,7 @@ def logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_tes
     score_ks = make_scorer(cost_function_ks, greater_is_better=True, needs_proba=True)
     # set GridSearchCV as cross validation
     gd_clf = GridSearchCV(model_estimator, param_grid, n_jobs=1, refit=True, cv=3, verbose=1, scoring=score_ks)
-    
+
     # there are two loop to run cross validation and param selection iterations
     classifiers = run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle)
 
@@ -81,14 +81,15 @@ def logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_tes
 
 def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle):
     logger = logging.getLogger('model-learner.model_building.run_GridSearchCV_fit')
-    
+
     # fit the model
     print('start build model.')
     model = gd_clf.fit(X_train, y_train)
 
     print('save model.')
     if pickle:
-        name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl')
+        #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
+        name_list =  joblib.dump(model,label)
         # print name_list
 
     print('\n ==> model: ')
@@ -97,18 +98,18 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     print gd_clf
     print('\n ==> grid scores: ')
     print gd_clf.grid_scores_
-    print("\n ==> best ks score: %0.3f" % gd_clf.best_score_)    
+    print("\n ==> best ks score: %0.3f" % gd_clf.best_score_)
     print('\n ==> best estimator: ')
     print gd_clf.best_estimator_
     print('\n ==> best param: ')
-    print gd_clf.best_params_ 
-    best_parameters = dict();  
-    best_parameters = gd_clf.best_estimator_.get_params()  
+    print gd_clf.best_params_
+    best_parameters = dict();
+    best_parameters = gd_clf.best_estimator_.get_params()
     print best_parameters
 
     # plot gains chart on testing dataset
     plot_gains_chart(model, X_test, y_test, label)
-       
+
     return classifiers
 
 def plot_gains_chart(model, X_test, y_test, label):
@@ -176,22 +177,22 @@ def calc_clf_model(clf, X_train, y_train, X_test, y_test, label, classifiers, MO
 
     model = clf.fit(X_train, y_train)
     metrics = model_metrics(model, X_test, y_test, X_train, y_train, label)
-    
+
     classifiers[label] = metrics
-    
+
     if pickle:
         joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl')
-    
+
     return model, classifiers
 
 def model_metrics(model, X_test, y_test, X_train, y_train, label):
     logger = logging.getLogger('model-learner.model_building.model_metrics')
-    
+
     test_fpr, test_tpr, test_roc_auc = calc_model_metrics(model, X_test, y_test)
     train_fpr, train_tpr, train_roc_auc = calc_model_metrics(model, X_train, y_train)
-    
+
     print("area under ROC curve for model " + label + " test, train: %f" % test_roc_auc,train_roc_auc)
-    
+
     # build a dictionary with the relevant output from the model
     outputDict = {
                 'label':label,

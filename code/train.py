@@ -70,12 +70,19 @@ def online_traning_api(input_file_name,model_id):
     # build models
     logger.info('==> Build Model.')
     utils.logInfoTime(logger, 'Started Model Building')
-    model_building.modelsBuild(data_np_array, y_np_array,'model_',logger)
+    model_building.modelsBuild(data_np_array, y_np_array,model_id,logger)
     utils.logInfoTime(logger, 'Finished Model Building')
 
     utils.logInfoTime(logger, 'Finished')
 
-    print('model training complete')
+    #print('model training complete')
 
 #online_traning_api()
-offline_train()
+#offline_train()
+
+if len(sys.argv) < 3:
+    print "error: need 3 arguments"
+else:
+    train_csv_file_path = sys.argv[1]
+    model_saved_path = sys.argv[2]
+    online_traning_api(train_csv_file_path,model_saved_path)

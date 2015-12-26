@@ -51,7 +51,7 @@ def score_one_iterm_online(model_path,feature_string):
     #print  np_data.shape
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
-    print score_normalization(300,900,output[0][0])
+    print "returnValue:",score_normalization(300,900,output[0][0])
     logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
 
 def score_normalization(min_v,max_v,current_v):
