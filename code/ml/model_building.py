@@ -37,7 +37,7 @@ def modelsBuild(np_data, y, model_id,logger):
     if settings.models['Logistic Regression Grid Search']==True:
         print 'run logistic regression GridSearchCV...'
         classifiers = modfuncs.logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_test, classifiers, \
-                                model_id+'Logistic Regression Grid Search', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True)
+                                model_id, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True)
 
     # Decision Tree
     sklearn_params={

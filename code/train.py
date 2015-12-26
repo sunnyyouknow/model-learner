@@ -39,7 +39,7 @@ def  offline_train():
     # build models
     logger.info('==> Build Model.')
     utils.logInfoTime(logger, 'Started Model Building')
-    model_building.modelsBuild(data_np_array, y_np_array, 'model_',logger)
+    model_building.modelsBuild(data_np_array, y_np_array, 'hbc_train_offline.model',logger)
     utils.logInfoTime(logger, 'Finished Model Building')
 
     utils.logInfoTime(logger, 'Finished')
@@ -79,10 +79,11 @@ def online_traning_api(input_file_name,model_id):
 
 #online_traning_api()
 #offline_train()
-
+#offline_train()
+#sys.exit()
 if len(sys.argv) < 3:
     print "error: need 3 arguments"
 else:
-    train_csv_file_path = sys.argv[1]
-    model_saved_path = sys.argv[2]
+    train_csv_file_path = sys.argv[2]
+    model_saved_path = sys.argv[1]
     online_traning_api(train_csv_file_path,model_saved_path)

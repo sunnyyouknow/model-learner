@@ -90,33 +90,33 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     if pickle:
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
         name_list =  joblib.dump(model,label)
-        # print name_list
+        print name_list
 
     print('\n ==> model: ')
-    print model
-    print('\n ==> GridSearchCV: ')
-    print gd_clf
-    print('\n ==> grid scores: ')
-    print gd_clf.grid_scores_
-    print("\n ==> best ks score: %0.3f" % gd_clf.best_score_)
-    print('\n ==> best estimator: ')
-    print gd_clf.best_estimator_
-    print('\n ==> best param: ')
-    print gd_clf.best_params_
+    #print model
+    #print('\n ==> GridSearchCV: ')
+    #print gd_clf
+    #print('\n ==> grid scores: ')
+    #print gd_clf.grid_scores_
+    #print("\n ==> best ks score: %0.3f" % gd_clf.best_score_)
+    #print('\n ==> best estimator: ')
+    #print gd_clf.best_estimator_
+    #print('\n ==> best param: ')
+    #print gd_clf.best_params_
     best_parameters = dict();
     best_parameters = gd_clf.best_estimator_.get_params()
-    print best_parameters
+    #print best_parameters
 
     # plot gains chart on testing dataset
-    plot_gains_chart(model, X_test, y_test, label)
-
+    plot_data=plot_gains_chart(model, X_test, y_test, label)
+    print "returnValue:",plot_data
     return classifiers
 
 def plot_gains_chart(model, X_test, y_test, label):
     y_proba = model.predict_proba(X_test)
     proba_w = [x[0] for x in y_proba]
     proba_b = [x[1] for x in y_proba]
-    make_gains_chart(proba_b, y_test, 1)
+    return make_gains_chart(proba_b, y_test, 1)
 
 def make_gains_chart(y_proba, y_test, step):
     # ind = argsort(y_proba)[::-1]
@@ -133,8 +133,8 @@ def make_gains_chart(y_proba, y_test, step):
     plt.axis([0, 100, 0, 100])
     plt.xlabel(u"占总人群百分比(%)")
     plt.ylabel(u"占违约人群百分比(%)")
-
-    plt.show()
+    ##plt.show()
+    return plot_data
 
 def cost_function_ks(ground_truth, predictions):
     # print predictions.shape
