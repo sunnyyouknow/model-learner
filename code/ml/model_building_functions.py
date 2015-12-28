@@ -90,7 +90,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     if pickle:
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
         name_list =  joblib.dump(model,label)
-        print name_list
+        #print name_list
 
     print('\n ==> model: ')
     #print model
@@ -108,7 +108,12 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     #print best_parameters
 
     # plot gains chart on testing dataset
+    #fig = plt.figure(1)
     plot_data=plot_gains_chart(model, X_test, y_test, label)
+    plot_img_name_prefix = os.path.split(label)
+    plot_img_name = plot_img_name_prefix[0] + "/model_plot.jpg"
+    print plot_img_name
+    plt.savefig(plot_img_name)
     print "returnValue:",plot_data
     return classifiers
 
