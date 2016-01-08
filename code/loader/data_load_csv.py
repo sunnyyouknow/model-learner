@@ -34,20 +34,22 @@ def csv_train_from_one_file(file_name):
         print file_name
         training_data = load_csv_file(file_name);
 
-        print 'training data:'
-        print(training_data.shape)
+        #print 'training data:'
+        #print(training_data,training_data.shape)
         # for x in xrange(1,len(data_white)):
         #     print 'white %d: ' %x
         #     pp.pprint(data_white[x])
         logger.info ('==> Data Load White and Black Samples Completed Successfully')
         print('Data Load White and Black Samples Completed Successfully')
-
+        if training_data.shape[0] < 1:
+            print "Error invalid trainnin data"
+            return training_data,training_data
         # Merge training samples
         data_np_array = training_data[:,0:-1]
         y_np_array = training_data[:,-1]
-        print 'X:'
+        #print 'X:'
         print(data_np_array.shape)
-        print 'y:'
+        #print 'y:'
         print(y_np_array.shape)
 
         return data_np_array, y_np_array

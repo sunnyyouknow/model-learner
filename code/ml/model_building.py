@@ -15,14 +15,41 @@ import pprint as pp
 from sklearn.externals import joblib
 import settings
 
+def validInputCheck(np_data,y,cv):
+    print (np_data.shape)[0],(np_data.shape)[1],y.shape[0]
+    if np_data.shape[0] != y.shape[0] :
+        print  "Error feature nums does not match label nums"
+        return 0
+    if np_data.shape[1] == 0:
+        print  "Error feature dimension is 0"
+        return  0
+    # check if the sample num is enough for l-fold cross validation
+    if(np_data.shape[0] < cv * cv):
+        print "Error Cannot have number of folds %d greater than the number of samples"%(cv)
+        return  0
+
+    if len(list(set(y))) < 2:
+        print "Error only one class,can not apply trainning"
+        return  0
+
+    return 1
+
+
+
+
 def modelsBuild(np_data, y, model_id,logger):
     logger = logging.getLogger('model-learner.model_building')
 
     classifiers = {}
-
+    status = validInputCheck(np_data,y,3)
+    if status == 0:
+        return ""
+    #return 0
     # split samples into training set and testing set
     logger.info('==> Create Test and Training Sets.')
+
     X_train, X_test, y_train, y_test = modfuncs.basic_train_test_split(np_data, y)
+
     joblib.dump({'X_test':X_test, 'y_test':y_test}, settings.INPUT_DIR+'/test_data.pkl')
 
     # build models

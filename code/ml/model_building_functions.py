@@ -114,7 +114,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     plot_img_name = plot_img_name_prefix[0] + "/model_plot.jpg"
     print plot_img_name
     plt.savefig(plot_img_name)
-    print "returnValue:",plot_data
+    print "returnValue:",gd_clf.best_score_
     return classifiers
 
 def plot_gains_chart(model, X_test, y_test, label):
@@ -160,6 +160,11 @@ def cost_function_ks(ground_truth, predictions):
     w = len(y_test) - b
 
     dif = 0
+
+    # for
+    print  b,w
+    b = b + 1
+    w = w + 1
     for i in range(step, 100+step, step):
         s_b = 0
         s_w = 0
@@ -167,13 +172,15 @@ def cost_function_ks(ground_truth, predictions):
             s_b += y_test[ind_b[i]]
             if y_test[ind_w[i]] == 0:
                 s_w += 1
+
         plot_data_b.append(s_b * 100.0 / b)
         plot_data_w.append(s_w * 100.0 / w)
 
         temp = s_w * 100.0 / w - s_b * 100.0 / b
         if temp > dif:
             dif = temp
-    # print "k-s value: ", dif
+
+    #print "k-s value: ", dif
 
     return dif
 
