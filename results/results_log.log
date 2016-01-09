@@ -1,0 +1,10 @@
+Master - Started 01:19:18.098235
+Master - --------------------------------- Data Load -----------------------------------
+Master - Started Data Load 01:19:18.098495
+Master.Data_load.csvfile - Data Load White and Black Samples Completed Successfully
+Master - Finished Data Load 01:19:18.328625
+Master - --------------------------------- Model Building -----------------------------------
+Master - Started Model Building 01:19:18.328878
+Master.Models_Build - --------------------------------- Modelling - Create Test and Training Sets -----------------------------------
+Master - Finished Model Building 01:19:25.599776
+Master - Finished 01:19:25.600189
