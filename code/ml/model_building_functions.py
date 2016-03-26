@@ -90,6 +90,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     # fit the model
     print('start build model.')
     model = gd_clf.fit(X_train, y_train)
+    print "returnValue:",gd_clf.best_score_
 
     print('save model.')
     if pickle:
@@ -119,7 +120,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     #plot_img_name = plot_img_name_prefix[0] + "/model_plot.jpg"
     #print plot_img_name
     #plt.savefig(plot_img_name)
-    print "returnValue:",gd_clf.best_score_
+    
     return classifiers
 
 def score_normalization_batch(y_test_prob):
@@ -171,7 +172,7 @@ def plot_gains_chart(model, X_test, y_test, label):
     proba_b = [x[1] for x in y_proba]
 
     # add normalization score chart
-    make_figure_score(y_proba, y_test, label);
+    #make_figure_score(y_proba, y_test, label);
 
     return make_gains_chart(proba_b, y_test, 1, label)
 
