@@ -1,0 +1,25 @@
+public void updateTrainingSamplesNum (String modelID, int whitePhoneNum, int blackPhoneNum) {
+		Connection conn=getConnection();	
+		if (conn!=null) {
+			try {
+				Statement stmt = conn.createStatement();
+				String sql = null;
+				sql = "update module set white_num=" + String.valueOf(whitePhoneNum) + ",black_num=" + String.valueOf(blackPhoneNum) + " where id=" + modelID;
+				stmt.executeUpdate(sql);
+			} catch (Exception e) {
+				  log.error("更新模型状态出错" + e);
+			} finally {
+				close(conn);
+			}
+		}
+	}
+
+
+int whitePhoneNum = 0;
+int blackPhoneNum = 0;
+
+if (index <= whiteSize) {
+	whitePhoneNum += row;
+} else {
+	blackPhoneNum += row;
+}
