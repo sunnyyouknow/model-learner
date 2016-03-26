@@ -172,7 +172,7 @@ def plot_gains_chart(model, X_test, y_test, label):
     proba_b = [x[1] for x in y_proba]
 
     # add normalization score chart
-    #make_figure_score(y_proba, y_test, label);
+    make_figure_score(y_proba, y_test, label);
 
     return make_gains_chart(proba_b, y_test, 1, label)
 
