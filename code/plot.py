@@ -62,8 +62,8 @@ def make_figure_score(proba_b, y_test, path):
     #plt.plot(range(300, 900 + step2, step2), plot_data)
     plt.plot(range(300, 900 + 12, 12), [i for i in range(0, 100+2, 2)], '.')
     #plt.axis([0, 100, 0, 100])
-    plt.xlabel(u"评分")#, fontproperties=myfont)
-    plt.ylabel(u"占违约人群百分比(%)")#, fontproperties=myfont)
+    plt.xlabel(u"评分", fontproperties=myfont)
+    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
     #plt.show()
     plot_img_name = pkl_saved_path + "score_plot.png"
     print plot_img_name
@@ -82,8 +82,8 @@ def make_figure_ks(proba_b, y_test, step, path):
     plt.plot(range(0, 100+step, step), plot_data)
     plt.plot(range(0, 100+step, step), [i for i in range(0, 100+step, step)], '.')
     plt.axis([0, 100, 0, 100])
-    plt.xlabel(u"占总人群百分比(%)")#, fontproperties=myfont)
-    plt.ylabel(u"占违约人群百分比(%)")#, fontproperties=myfont)
+    plt.xlabel(u"占总人群百分比(%)", fontproperties=myfont)
+    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
     ##plt.show()
     plot_img_name = path + "ks_plot.png"
     print plot_img_name
