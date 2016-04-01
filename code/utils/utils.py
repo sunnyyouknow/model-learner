@@ -3,6 +3,21 @@
 import logging
 import datetime
 import os
+from scipy import stats
+import pickle
+import settings
+
+
+def score_normalization(min_v,max_v,current_v):
+    return min_v + (max_v - min_v)*current_v
+
+def cal_real_score(score):
+    f = open(settings.INPUT_DIR + "scores_base.pkl")
+    scores_list = pickle.load(f)
+    f.close()
+    percentile = stats.percentileofscore(scores_list, score)
+    return score_normalization(300, 900, percentile / 100.0)
+
 
 # define function to set up the logging
 def setLog(logging_file,logtype='Master'):
