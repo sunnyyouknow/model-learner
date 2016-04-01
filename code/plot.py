@@ -37,11 +37,11 @@ def score_normalization_batch(proba_b):
 def score_normalization(min, max, p):
     return min + (max * p)
 
-def make_figure_score(proba_b, y_test, path):
+def make_figure_score(proba_b, y_test, path, model_id):
     # load score base file
     name_prefix = os.path.split(path)
     print name_prefix
-    f = open(settings.INPUT_DIR + 'scores_base.pkl', 'rb')
+    f = open(settings.INPUT_DIR + 'scores_base_' + model_id + '.pkl', 'rb')
     scores_base = pickle.load(f)
     print len(scores_base)
     f.close()
@@ -96,7 +96,7 @@ y_test = []
 proba_b = []
 operator_nane = ['yd', 'lt', 'dx']
 pkl_saved_path = sys.argv[1]
-
+model_id = pkl_saved_path[-2:-1]
 # load proba_b and y_test from pkl files
 for i in range(len(operator_nane)):
 	prefix_path = pkl_saved_path + operator_nane[i]
@@ -115,7 +115,7 @@ for i in range(len(operator_nane)):
 
 if len(proba_b) ==  len(y_test):
 	# plot score chart
-	make_figure_score(proba_b, y_test, pkl_saved_path)
+	make_figure_score(proba_b, y_test, pkl_saved_path, model_id)
 	# plot ks chart
 	make_figure_ks(proba_b, y_test, 1, pkl_saved_path)
 
