@@ -1,6 +1,7 @@
 # Script to execute previously build models on a testing dataset
 import sys;
 import numpy
+from scipy import stats
 
 sys.path.append("loader/")
 sys.path.append("preprocess/")
@@ -9,6 +10,7 @@ sys.path.append("configs/")
 sys.path.append("utils/")
 
 import logging
+import pickle
 import data_load
 import data_load_csv
 import datetime
@@ -55,6 +57,7 @@ def score_one_iterm_online(model_path,feature_string):
     '''   
     #print  np_data.shape
     model_id = model_path[-21:-20]
+    print 'modelID:', model_id
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
     score = score_normalization(300,900,output[0][0])
