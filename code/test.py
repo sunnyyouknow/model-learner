@@ -48,14 +48,30 @@ def score_one_iterm_online(model_path,feature_string):
     np_data = numpy.fromstring(feature_string, dtype=int, sep=",")
 
     np_data = np_data.reshape(1,-1)
+    '''
+    missing_value_model_path = model_path + ".miss_value_model"
+    if os.path.exists(missing_value_model_path)
+        np_data = missing_value.load_miss_value_mode(np_data,missing_value_model_path)
+    '''   
     #print  np_data.shape
+    model_id = model_path[-21:-20]
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
-    print "returnValue:",score_normalization(300,900,output[0][0])
+    score = score_normalization(300,900,output[0][0])
+    score_fixed = cal_real_score(score, model_id)
+    print "returnValue:",score_fixed
     logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
 
 def score_normalization(min_v,max_v,current_v):
     return min_v + (max_v - min_v)*current_v
+
+def cal_real_score(score, model_id):
+    f = open(settings.INPUT_DIR + "scores_base_" + model_id + ".pkl")
+    scores_list = pickle.load(f)
+    f.close()
+    percentile = stats.percentileofscore(scores_list, score)
+    return score_normalization(300, 900, percentile / 100.0)
+
 
 if len(sys.argv) < 3:
     print "error: need 3 arguments"
