@@ -75,12 +75,17 @@ def cal_real_score(score, model_id):
     percentile = stats.percentileofscore(scores_list, score)
     return score_normalization(300, 900, percentile / 100.0)
 
-
-if len(sys.argv) < 3:
-    print "error: need 3 arguments"
-else:
-    model_path = sys.argv[1]
-    feature_string = sys.argv[2]
-    score_one_iterm_online(model_path,feature_string)
-#score_csv()
-#score_one_iterm_online("")
+def test(model_path, feature_string):
+    '''
+    if len(sys.argv) < 3:
+        print "error: need 3 arguments"
+    else:
+        model_path = sys.argv[1]
+        feature_string = sys.argv[2]
+        score_one_iterm_online(model_path,feature_string)
+    '''
+    
+    score = score_one_iterm_online(model_path,feature_string)
+    return score
+    #score_csv()
+    #score_one_iterm_online(“")

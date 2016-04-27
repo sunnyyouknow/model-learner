@@ -35,7 +35,7 @@ def score_normalization_batch(proba_b):
     return scores_fixed
 
 def score_normalization(min, max, p):
-    return min + (max * p)
+    return min + ((max-min) * p)
 
 def make_figure_score(proba_b, y_test, path, model_id):
     # load score base file
