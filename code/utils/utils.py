@@ -3,20 +3,9 @@
 import logging
 import datetime
 import os
-from scipy import stats
 import pickle
 import settings
 
-
-def score_normalization(min_v,max_v,current_v):
-    return min_v + (max_v - min_v)*current_v
-
-def cal_real_score(score):
-    f = open(settings.INPUT_DIR + "scores_base.pkl")
-    scores_list = pickle.load(f)
-    f.close()
-    percentile = stats.percentileofscore(scores_list, score)
-    return score_normalization(300, 900, percentile / 100.0)
 
 
 # define function to set up the logging
@@ -39,36 +28,36 @@ def setLog(logging_file,logtype='Master'):
     fh.setFormatter(formatter)
     # add handler to logger object
     logger.addHandler(fh)
-    
+
 # simple function to add the input information to the log with a timestamp
 def logInfoTime(logger, text):
     logger.info(text + ' %s', datetime.datetime.now().time().isoformat())
-    
-    
+
+
 # Define a function to parse the decision tree dot file to make
 # it more readable
 def parseDecTree(dot_file,var_list):
     # import the regular expression library
     import re
     import os
-    
+
     # open the dot file for reading
     inFile=open(dot_file,'r')
     # open the output file
     outFile = open(os.path.splitext(dot_file)[0]+'_labels.dot','w')
-    
+
     # make a dictionary from the input var list
     d={}
     counter=0
     for var in var_list:
         d['X['+str(counter)+']'] = var
         counter+=1
-    
+
     # use the dictionary to make a regular expression pattern for replacement
     # the key has '[' and ']' so need to escape these
     pattern = re.compile('|'.join(re.escape(key) for key in d.keys()))
-    
-    # make an output list for the file, loop over the lines in the file and 
+
+    # make an output list for the file, loop over the lines in the file and
     # apply the replacement
     out=[]
     var_list=[]
@@ -78,12 +67,12 @@ def parseDecTree(dot_file,var_list):
         for key,var in d.items():
             if key in line:
                 var_list.append(var)
-    
+
     # now write out the file
     for item in out:
         outFile.write(item)
-        
+
     outFile.close()
     inFile.close()
-    
+
     return var_list

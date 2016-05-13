@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys;
+import sys
 from sklearn import linear_model as sklm
 from sklearn import tree as sktree
 from sklearn import cross_validation as cv
@@ -124,7 +124,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     #plot_img_name = plot_img_name_prefix[0] + "/model_plot.jpg"
     #print plot_img_name
     #plt.savefig(plot_img_name)
-    
+
     return classifiers
 
 def score_normalization_batch(proba_b):

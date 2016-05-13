@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.font_manager as fm
-myfont = fm.FontProperties(fname='/usr/share/fonts/simhei.ttf')
+myfont = fm.FontProperties(fname='fonts/fangsong.ttf')
 import matplotlib.pyplot as plt
 import pylab as pl
 import logging
@@ -24,7 +24,6 @@ import pprint as pp
 import settings
 import pickle
 import scipy
-
 
 
 def score_normalization_batch(proba_b):
@@ -77,7 +76,7 @@ def make_figure_ks(proba_b, y_test, step, path):
         s = 0
         for i in range(len(y_test)*i / 100):
             s += y_test[ind[i]]
-        plot_data.append(s * 100.0 / sum(y_test))
+        plot_data.append(s * 100.0 /(sum(y_test)+1))
 
     plt.plot(range(0, 100+step, step), plot_data)
     plt.plot(range(0, 100+step, step), [i for i in range(0, 100+step, step)], '.')
@@ -118,7 +117,3 @@ if len(proba_b) ==  len(y_test):
 	make_figure_score(proba_b, y_test, pkl_saved_path, model_id)
 	# plot ks chart
 	make_figure_ks(proba_b, y_test, 1, pkl_saved_path)
-
-
-
-

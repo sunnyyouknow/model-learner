@@ -54,9 +54,10 @@ def score_one_iterm_online(model_path,feature_string):
     missing_value_model_path = model_path + ".miss_value_model"
     if os.path.exists(missing_value_model_path)
         np_data = missing_value.load_miss_value_mode(np_data,missing_value_model_path)
-    '''   
+    '''
     #print  np_data.shape
     model_id = model_path[-21:-20]
+    #model_id = "2"
     print 'modelID:', model_id
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
