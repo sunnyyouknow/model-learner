@@ -7,7 +7,6 @@ import pickle
 import settings
 
 
-
 # define function to set up the logging
 def setLog(logging_file,logtype='Master'):
     #Firstly make backup of previous run log file (Only does this for last run only).
@@ -24,7 +23,7 @@ def setLog(logging_file,logtype='Master'):
     # create the logging file handler
     fh = logging.FileHandler(logging_file)
     # could add log format here if required.
-    formatter = logging.Formatter('%(name)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
     # add handler to logger object
     logger.addHandler(fh)
