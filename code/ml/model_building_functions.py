@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys;
+import sys
 from sklearn import linear_model as sklm
 from sklearn import tree as sktree
 from sklearn import cross_validation as cv
@@ -10,11 +10,6 @@ from sklearn.externals import joblib
 from sklearn import ensemble as en
 from numpy import argsort
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.font_manager as fm
-myfont = fm.FontProperties(fname='/usr/share/fonts/simhei.ttf')
-import matplotlib.pyplot as plt
 import pylab as pl
 import logging
 import datetime
@@ -101,11 +96,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
         name_list =  joblib.dump(model,label)
         #print name_list
-
     print('\n ==> model: ')
-    #print model
-    #print('\n ==> GridSearchCV: ')
-    #print gd_clf
     #print('\n ==> grid scores: ')
     #print gd_clf.grid_scores_
     #print("\n ==> best ks score: %0.3f" % gd_clf.best_score_)
@@ -115,16 +106,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     #print gd_clf.best_params_
     best_parameters = dict();
     best_parameters = gd_clf.best_estimator_.get_params()
-    #print best_parameters
-
-    # plot gains chart on testing dataset
-    #fig = plt.figure(1)
-    plot_data=plot_gains_chart(model, X_test, y_test, label)
-    #plot_img_name_prefix = os.path.split(label)
-    #plot_img_name = plot_img_name_prefix[0] + "/model_plot.jpg"
-    #print plot_img_name
-    #plt.savefig(plot_img_name)
-    
+    save_plot_data(model, X_test, y_test, label)
     return classifiers
 
 def score_normalization_batch(proba_b):
@@ -137,40 +119,7 @@ def score_normalization_batch(proba_b):
 def score_normalization(min, max, p):
     return min + (max * p)
 
-def make_figure_score(proba_b, y_test, label):
-    # load score base file
-    name_prefix = os.path.split(label)
-    print name_prefix
-    f = open(settings.INPUT_DIR + 'scores_base.pkl', 'rb')
-    scores_base = pickle.load(f)
-    print len(scores_base)
-    f.close()
-
-    # score normalization
-    scores_unfixed = score_normalization_batch(proba_b)
-    scores_fixed = []
-    for score in scores_unfixed:
-        score_fixed = score_normalization(300, 900, scipy.stats.percentileofscore(scores_base, score, kind='mean') / 100.0)
-        scores_fixed.append(score_fixed)
-
-    black_num = sum(y_test)
-    ind = argsort(scores_fixed)
-    scores_new = [scores_fixed[i] for i in ind]
-    labels_sorted = [y_test[i] for i in ind]
-    plot_data = [sum(labels_sorted[:i])*100.0/sum(labels_sorted) for i in range(len(scores_new))]
-    plt.plot(scores_new, plot_data)
-    #plt.plot(range(300, 900 + step2, step2), plot_data)
-    plt.plot(range(300, 900 + 12, 12), [i for i in range(0, 100+2, 2)], '.')
-    #plt.axis([0, 100, 0, 100])
-    plt.xlabel(u"评分", fontproperties=myfont)
-    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
-    #plt.show()
-    plot_img_name_prefix = os.path.split(label)
-    plot_img_name = plot_img_name_prefix[0] + "/score_plot.png"
-    print plot_img_name
-    plt.savefig(plot_img_name)
-
-def plot_gains_chart(model, X_test, y_test, label):
+def save_plot_data(model, X_test, y_test, label):
     y_proba = model.predict_proba(X_test)
     proba_w = [x[0] for x in y_proba]
     proba_b = [x[1] for x in y_proba]
@@ -184,32 +133,6 @@ def plot_gains_chart(model, X_test, y_test, label):
     pickle.dump(proba_b, out_proba)
     pickle.dump(y_test, out_test)
 
-    # add normalization score chart
-    #make_figure_score(proba_b, y_test, label)
-    #make_gains_chart(proba_b, y_test, 1, label)
-
-def make_gains_chart(proba_b, y_test, step, label):
-    # ind = argsort(y_proba)[::-1]
-    ind = argsort(proba_b)
-    plot_data = [0]
-    for i in range(step, 100 + step, step):
-        s = 0
-        for i in range(len(y_test)*i / 100):
-            s += y_test[ind[i]]
-        plot_data.append(s * 100.0 / sum(y_test))
-
-    plt.plot(range(0, 100+step, step), plot_data)
-    plt.plot(range(0, 100+step, step), [i for i in range(0, 100+step, step)], '.')
-    plt.axis([0, 100, 0, 100])
-    plt.xlabel(u"占总人群百分比(%)", fontproperties=myfont)
-    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
-    ##plt.show()
-    plot_img_name_prefix = os.path.split(label)
-    plot_img_name = plot_img_name_prefix[0] + "/ks_plot.png"
-    print plot_img_name
-    plt.savefig(plot_img_name)
-
-    return plot_data
 
 def cost_function_ks(ground_truth, predictions):
     # print predictions.shape
