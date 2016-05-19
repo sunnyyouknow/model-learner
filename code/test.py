@@ -10,8 +10,8 @@ sys.path.append("configs/")
 sys.path.append("utils/")
 
 import logging
-import pickle
 import data_load
+import pickle
 import data_load_csv
 import datetime
 import utils
@@ -54,17 +54,16 @@ def score_one_iterm_online(model_path,feature_string):
     missing_value_model_path = model_path + ".miss_value_model"
     if os.path.exists(missing_value_model_path)
         np_data = missing_value.load_miss_value_mode(np_data,missing_value_model_path)
-    '''
+    '''   
     #print  np_data.shape
     model_id = model_path[-21:-20]
-    #model_id = "2"
-    print 'modelID:', model_id
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
     score = score_normalization(300,900,output[0][0])
     score_fixed = cal_real_score(score, model_id)
     print "returnValue:",score_fixed
     logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
+    return score_fixed
 
 def score_normalization(min_v,max_v,current_v):
     return min_v + (max_v - min_v)*current_v
@@ -76,12 +75,12 @@ def cal_real_score(score, model_id):
     percentile = stats.percentileofscore(scores_list, score)
     return score_normalization(300, 900, percentile / 100.0)
 
-
-if len(sys.argv) < 3:
-    print "error: need 3 arguments"
-else:
-    model_path = sys.argv[1]
-    feature_string = sys.argv[2]
-    score_one_iterm_online(model_path,feature_string)
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+       print "error: need 3 arguments"
+    else:
+       model_path = sys.argv[1]
+       feature_string = sys.argv[2]
+       score_one_iterm_online(model_path,feature_string)
 #score_csv()
 #score_one_iterm_online("")

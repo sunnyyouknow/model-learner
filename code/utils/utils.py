@@ -10,10 +10,10 @@ import settings
 # define function to set up the logging
 def setLog(logging_file,logtype='Master'):
     #Firstly make backup of previous run log file (Only does this for last run only).
-    if os.path.exists(logging_file + '.previous'): #checks if a previous logfile exists.
-        os.remove(logging_file + '.previous')
-    if os.path.exists(logging_file):
-        os.rename(logging_file, logging_file + '.previous')
+    #if os.path.exists(logging_file + '.previous'): #checks if a previous logfile exists.
+    #    os.remove(logging_file + '.previous')
+    #if os.path.exists(logging_file):
+    #    os.rename(logging_file, logging_file + '.previous')
     # set results log file (basically .info in log)
     if logtype=='Master':
         logger = logging.getLogger('Master')
