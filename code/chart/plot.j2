@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="echarts.common.min.js"></script>
+    <style type="text/css">
+        .xp{
+          writing-mode:tb-rl;
+          float: left;
+          position: relative;
+          top: 150px;
+        }
+        .yp{
+          width: 800px;
+          text-align: center;
+        }
+        #main{
+          float: left;
+        }
+    </style>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <p class="xp">占违约人群百分比(％)</p>
+    <div id="main" style="width: 800px; height: 500px;"></div>
+    <p class="yp">占总人群百分比(％)</p>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {{ opt }};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</body>
+</html>

@@ -45,7 +45,7 @@ def csv_train_from_one_file(file_name):
             print "Error invalid trainnin data"
             return training_data,training_data
         # Merge training samples
-        data_np_array = training_data[:,0:-1]
+        data_np_array = training_data[:,1:-1]
         y_np_array = training_data[:,-1]
         #print 'X:'
         print(data_np_array.shape)
@@ -102,7 +102,7 @@ def csv_score_file(INPUT_DIR, score_file_name):
 
     try:
         score_data = load_csv_file(INPUT_DIR + score_file_name);
-        score_data = score_data[:,0:-1]
+        score_data = score_data[:,1:]
         # print '----------- testing data -----------'
         # print(score_data.shape)
         # for x in xrange(1,len(score_data)):

@@ -83,7 +83,7 @@ def online_traning_api(input_file_name,model_id):
 #sys.exit()
 
 def train(model_saved_path, train_csv_file_path):
-    '''    
+    '''
     if len(sys.argv) < 3:
         print "error: need 3 arguments"
     else:
@@ -93,3 +93,11 @@ def train(model_saved_path, train_csv_file_path):
     '''
 
     online_traning_api(train_csv_file_path,model_saved_path)
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print "error: need 3 arguments"
+    else:
+        train_csv_file_path = sys.argv[2]
+        model_saved_path = sys.argv[1]
+        online_traning_api(train_csv_file_path,model_saved_path)

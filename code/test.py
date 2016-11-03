@@ -18,7 +18,7 @@ import utils
 import settings
 import model_testing_functions as mexec
 
-def score_csv():
+def score_csv(model_path):
     #Setup the logger
     print '%s' %settings.logging_file_scoring
     logger = utils.setLog(settings.logging_file_scoring, logtype='Exec')
@@ -29,14 +29,16 @@ def score_csv():
     logger.info('==> Load Data.')
     data = data_load_csv.csv_score_file(settings.INPUT_DIR, settings.score_file_name)
 
+    print settings.INPUT_DIR, settings.score_file_name,data.shape
     logger.info('==> Preprocessing data.')
-
+    print settings.MODELS_OUTPUT_DIR
 
     logger.info('==> Apply Data.')
-    output,clf = mexec.applyModel(settings.MODELS_OUTPUT_DIR +'model_'+ settings.model_pickle_file, data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
-
+    #output,clf = mexec.applyModel(settings.MODELS_OUTPUT_DIR +'model_'+ settings.model_pickle_file, data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
+    #output,clf = mexec.applyModel(settings.MODELS_OUTPUT_DIR +"hbc_credit.model", data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
+    output,clf = mexec.applyModel(model_path, data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
-    #print output[0]
+    print output
     print score_normalization(300,900,output[0][0])
     #print('model testing complete')
 
@@ -77,6 +79,9 @@ def cal_real_score(score, model_id):
 
 
 if __name__ == "__main__":
+    model_path = sys.argv[1]
+    score_csv(model_path)
+    sys.exit()
     if len(sys.argv) < 3:
        print "error: need 3 arguments"
     else:

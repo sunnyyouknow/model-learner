@@ -27,5 +27,6 @@ train_file_name_white = 'white_lt_5000_bin.csv'
 train_file_name_black = 'black_lt_1000_bin.csv'
 
 # score_file_name = 'test_data.pkl'
-score_file_name = train_file_name_black
+score_file_name = 'xyb_yd_feature.csv'
+score_file_name = 'bq_feature.csv'
 model_pickle_file = 'Logistic_Regression_Grid_Search.pkl'

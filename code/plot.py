@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys;
+import sys
 sys.path.append("configs/")
-from sklearn import linear_model as sklm
-from sklearn import tree as sktree
-from sklearn import cross_validation as cv
+sys.path.append("chart")
 from sklearn.metrics import roc_curve, auc, make_scorer
-from sklearn import preprocessing as prepro
-from sklearn.grid_search import GridSearchCV
-from sklearn.externals import joblib
-from sklearn import ensemble as en
 from numpy import argsort
 import numpy as np
 import matplotlib
@@ -24,6 +18,10 @@ import pprint as pp
 import settings
 import pickle
 import scipy
+import math
+import copy
+
+import echart_view
 
 
 def score_normalization_batch(proba_b):
@@ -35,6 +33,27 @@ def score_normalization_batch(proba_b):
 
 def score_normalization(min, max, p):
     return min + ((max-min) * p)
+
+def make_score_odd_figure(scores_fixed, y_test, path, model_id):
+    # load score base file
+
+    # score normalization
+    black_num = sum(y_test)
+    ind = argsort(scores_fixed)
+    scores_new = [scores_fixed[i] for i in ind]
+    labels_sorted = [y_test[i] for i in ind]
+    plot_data = [sum(labels_sorted[:i])*100.0/sum(labels_sorted) for i in range(len(scores_new))]
+    plt.plot(scores_new, plot_data)
+    #plt.plot(range(300, 900 + step2, step2), plot_data)
+    plt.plot(range(300, 900 + 12, 12), [i for i in range(0, 100+2, 2)], '.')
+    #plt.axis([0, 100, 0, 100])
+    plt.xlabel(u"评分", fontproperties=myfont)
+    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
+    #plt.show()
+    plot_img_name = pkl_saved_path + "score_odd_plot.png"
+    print plot_img_name
+    plt.savefig(plot_img_name)
+
 
 def make_figure_score(proba_b, y_test, path, model_id):
     # load score base file
@@ -76,6 +95,7 @@ def make_figure_ks(proba_b, y_test, step, path):
         s = 0
         for i in range(len(y_test)*i / 100):
             s += y_test[ind[i]]
+        #print s
         plot_data.append(s * 100.0 /(sum(y_test)+1))
 
     plt.plot(range(0, 100+step, step), plot_data)
@@ -83,37 +103,75 @@ def make_figure_ks(proba_b, y_test, step, path):
     plt.axis([0, 100, 0, 100])
     plt.xlabel(u"占总人群百分比(%)", fontproperties=myfont)
     plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
-    ##plt.show()
+    #plt.show()
     plot_img_name = path + "ks_plot.png"
     print plot_img_name
     plt.savefig(plot_img_name)
 
+def make_chart(proba_b, y_test, step, path):
+    plt.figure()
+    ind = argsort(-np.array(proba_b))
+    plot_data = [0]
+    for i in range(step, 100 + step, step):
+        s = 0
+        for i in range(len(y_test) * i / 100):
+            if y_test[ind[i]] == 1:
+                s += 1
+        tmp = s * 100.0 / (sum(y_test) + 1)
+        plot_data.append(round(tmp,2))
 
+    xis_data = range(0, 100 + step, step)
+    print xis_data,plot_data
+    plt.plot(xis_data, plot_data)
+    plt.plot(xis_data,xis_data, '.')
+    plt.axis([0, 100, 0, 100])
+    plt.xlabel(u"占总人群百分比(%)", fontproperties=myfont)
+    plt.ylabel(u"占违约人群百分比(%)", fontproperties=myfont)
+    # plt.show()
 
-################
-y_test = []
-proba_b = []
-operator_nane = ['yd', 'lt', 'dx']
-pkl_saved_path = sys.argv[1]
-model_id = pkl_saved_path[-2:-1]
-# load proba_b and y_test from pkl files
-for i in range(len(operator_nane)):
-	prefix_path = pkl_saved_path + operator_nane[i]
-	proba_file_name = prefix_path + "/proba_b.pkl"
-	test_file_name = prefix_path + "/y_test.pkl"
+    plot_img_name = path + "chart.png"
+    print plot_img_name
+    plt.savefig(plot_img_name)
+    echart_view.Process(xis_data,plot_data)
 
-	if os.path.exists(proba_file_name):
-		proba_pkl_file = open(proba_file_name, 'rb')
-		proba_data = pickle.load(proba_pkl_file)
-		proba_b.extend(proba_data)
+def compute_log_odd(proba_b,y_test):
+    log_odd = copy.deepcopy(proba_b)
+    for i in range(len(proba_b)):
+        log_odd[i] = math.log(proba_b[i]/(1-proba_b[i]))
+        log_odd[i] = 500 + log_odd[i] * 80
 
-	if os.path.exists(test_file_name):
-		test_pkl_file = open(test_file_name, 'rb')
-		test_data = pickle.load(test_pkl_file)
-		y_test.extend(test_data)
+    return log_odd
 
-if len(proba_b) ==  len(y_test):
-	# plot score chart
-	make_figure_score(proba_b, y_test, pkl_saved_path, model_id)
-	# plot ks chart
-	make_figure_ks(proba_b, y_test, 1, pkl_saved_path)
+if __name__ == "__main__":
+    y_test = []
+    proba_b = []
+
+    pkl_saved_path = sys.argv[1]
+    model_id = pkl_saved_path[-2:-1]
+    model_id = "1"
+    # load proba_b and y_test from pkl files
+
+    prefix_path = pkl_saved_path
+    proba_file_name = prefix_path + "/proba_b.pkl"
+    test_file_name = prefix_path + "/y_test.pkl"
+
+    if os.path.exists(proba_file_name):
+        proba_pkl_file = open(proba_file_name, 'rb')
+        proba_data = pickle.load(proba_pkl_file)
+        proba_b.extend(proba_data)
+
+    if os.path.exists(test_file_name):
+        test_pkl_file = open(test_file_name, 'rb')
+        test_data = pickle.load(test_pkl_file)
+        y_test.extend(test_data)
+
+    #print proba_b,y_test
+    if len(proba_b) == len(y_test):
+        # plot score chart
+        make_figure_score(proba_b, y_test, pkl_saved_path, model_id)
+        # plot ks chart
+
+        aa = compute_log_odd(proba_b, y_test)
+        #make_score_odd_figure(aa, y_test, 1, pkl_saved_path)
+        make_figure_ks(proba_b, y_test, 1, pkl_saved_path)
+        make_chart(proba_b, y_test, 1, pkl_saved_path)

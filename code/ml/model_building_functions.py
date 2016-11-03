@@ -130,6 +130,7 @@ def save_plot_data(model, X_test, y_test, label):
     test_file_name = plot_img_name_prefix[0] + "/y_test.pkl"
     out_proba = open(proba_file_name, 'wb')
     out_test = open(test_file_name, 'wb')
+    print proba_file_name,test_file_name
     pickle.dump(proba_b, out_proba)
     pickle.dump(y_test, out_test)
 
