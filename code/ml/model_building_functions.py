@@ -92,10 +92,10 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, model_id, cla
     model = gd_clf.fit(X_train, y_train)
     print "returnValue:",gd_clf.best_score_
 
-    print('save model.')
+    print('save GridSearchCV model.')
     if pickle:
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
-        name_list =  joblib.dump(model,model_id)
+        name_list =  joblib.dump(model,model_id,compress = 3)
         #print name_list
     print('\n ==> model: ')
     #print('\n ==> grid scores: ')
@@ -219,7 +219,7 @@ def calc_clf_model(clf, X_train, y_train, X_test, y_test, label, classifiers, MO
     classifiers[label] = metrics
 
     if pickle:
-        joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl')
+        joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl',compress = 3)
 
     return model, classifiers
 

@@ -13,5 +13,6 @@ BankFeatureTitle = ['credittotalchangtimes', 'creditexpend',
  'debitouttimes', 'debitentersum', 'debittotalchangtimes', 'assetshortnetgrowth',
  'debitshortwaves', 'creditshortwaves', 'entershortwaves']
 
-
 YanzhenFeatureTitle = ['time_length', 'expendlevel']
+
+ComstomerFeatureTitle = {'ISEX','DAPPLYTERMINAL','IDATACOMPLETIONSCORES','AGE'}
