@@ -129,7 +129,7 @@ def xgboost(X_train,y_train, X_test, y_test,clf,label,model_saved_path,pickle,**
     clf.fit(X_train, y_train, early_stopping_rounds=50, eval_metric="auc",
             eval_set=[(X_train, y_train), (X_test, y_test)])
 
-    print('save model.')
+    print('save xgboost model.')
     if pickle:
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
         name_list =  joblib.dump(clf,model_saved_path,compress = 3)

@@ -13,11 +13,11 @@ models = {
            'Decision Tree':False
           ,'Logistic Regression':False
           ,'Random Forest':False
-          ,'Logistic Regression Grid Search':True
+          ,'Logistic Regression Grid Search':False
           ,'Decision Tree Grid Search':False
           ,'Random Forest Grid Search':False
           ,'SGD':False
-          ,'Xgboost':False
+          ,'Xgboost':True
          }
 
 # feature_selection=False
