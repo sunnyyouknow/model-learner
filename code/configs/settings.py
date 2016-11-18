@@ -17,6 +17,7 @@ models = {
           ,'Decision Tree Grid Search':False
           ,'Random Forest Grid Search':False
           ,'SGD':False
+          ,'Xgboost':False
          }
 
 # feature_selection=False

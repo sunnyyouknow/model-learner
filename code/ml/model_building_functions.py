@@ -9,8 +9,9 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.externals import joblib
 from sklearn import ensemble as en
 from numpy import argsort
+import xgboost as xgb
 import numpy as np
-import pylab as pl
+#import pylab as pl
 import logging
 import datetime
 import os
@@ -67,7 +68,7 @@ def decision_tree(X_train, y_train, X_test, y_test, classifiers, label, \
 
     return classifiers
 
-def logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_test, classifiers, label \
+def logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_test, classifiers, model_id \
                                 ,RESULTS_OUTPUT_DIR, MODELS_OUTPUT_DIR, score='accuracy', pickle=False):
     logger = logging.getLogger('model-learner.model_building.logistic_regression_GridSearch')
 
@@ -79,11 +80,11 @@ def logistic_regression_GridSearchCV(param_grid, X_train, y_train, X_test, y_tes
     gd_clf = GridSearchCV(model_estimator, param_grid, n_jobs=1, refit=True, cv=3, verbose=1, scoring=score_ks)
 
     # there are two loop to run cross validation and param selection iterations
-    classifiers = run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle)
+    classifiers = run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, model_id, classifiers, MODELS_OUTPUT_DIR, pickle)
 
     return classifiers
 
-def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classifiers, MODELS_OUTPUT_DIR, pickle):
+def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, model_id, classifiers, MODELS_OUTPUT_DIR, pickle):
     logger = logging.getLogger('model-learner.model_building.run_GridSearchCV_fit')
 
     # fit the model
@@ -94,7 +95,7 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     print('save model.')
     if pickle:
         #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
-        name_list =  joblib.dump(model,label)
+        name_list =  joblib.dump(model,model_id)
         #print name_list
     print('\n ==> model: ')
     #print('\n ==> grid scores: ')
@@ -106,8 +107,39 @@ def run_GridSearchCV_fit(gd_clf, X_train, y_train, X_test, y_test, label, classi
     #print gd_clf.best_params_
     best_parameters = dict();
     best_parameters = gd_clf.best_estimator_.get_params()
-    save_plot_data(model, X_test, y_test, label)
+    save_plot_data(model, X_test, y_test, model_id)
     return classifiers
+
+def xgboost(X_train,y_train, X_test, y_test,clf,label,model_saved_path,pickle,**sklearn_params):
+    s_p = np.sum(y_train == 1) + np.sum(y_test == 1)
+    s_n = np.sum(y_train == 0) + np.sum(y_test == 0)
+    print X_train.shape,X_test.shape
+    ratio = float(s_p) / np.sum(s_n)
+    clf = xgb.XGBClassifier(missing=9999999999,
+                            max_depth=3,
+                            n_estimators=100,
+                            learning_rate=0.1,
+                            nthread=4,
+                            subsample=1.0,
+                            colsample_bytree=0.5,
+                            min_child_weight=3,
+                            scale_pos_weight=ratio,
+                            seed=4242)
+
+    clf.fit(X_train, y_train, early_stopping_rounds=50, eval_metric="auc",
+            eval_set=[(X_train, y_train), (X_test, y_test)])
+
+    print('save model.')
+    if pickle:
+        #name_list = joblib.dump(model,MODELS_OUTPUT_DIR + '/' + label.replace(' ','_') + '.pkl)
+        name_list =  joblib.dump(clf,model_saved_path,compress = 3)
+        #print name_list
+    print('\n ==> model: ')
+
+    save_plot_data(clf, X_test, y_test, model_saved_path)
+    return clf
+
+
 
 def score_normalization_batch(proba_b):
     scores_fixed = []

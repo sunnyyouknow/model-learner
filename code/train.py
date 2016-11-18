@@ -1,5 +1,5 @@
 # Script to build models on a training dataset
-import sys;
+import sys
 sys.path.append("loader/")
 sys.path.append("preprocess/")
 sys.path.append("ml/")

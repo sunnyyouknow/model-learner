@@ -112,5 +112,10 @@ def modelsBuild(np_data, y, model_id,logger):
         classfiers = modfuncs.random_forest(X_train, y_train, X_test, y_test, classifiers, \
                                 'Random Forest', settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR, pickle=True, **sklearn_params)
 
+    if settings.models['Xgboost']==True:
+        print "run Xgboost ..."
+        classfiers = modfuncs.xgboost(X_train, y_train, X_test, y_test,classifiers,'xgboost',model_id,pickle=True,**sklearn_params)
+
+
 if __name__ == "__main__":
 	print ('Please run this script from the train script')

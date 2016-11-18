@@ -7,6 +7,7 @@ import pandas as pd
 
 def  load_csv_file(file_name):
     logger = logging.getLogger('model-learner.data_load.csv_train_file')
+    print file_name
     df = pd.read_csv(file_name, header = 0)
     #print df
     # for tab delimited use:

@@ -49,8 +49,9 @@ def score_one_iterm_online(model_path,feature_string):
 
     logger.info('Start testing: %s', datetime.datetime.now().time().isoformat())
     # transform string to numpy array
-    np_data = numpy.fromstring(feature_string, dtype=int, sep=",")
-
+    #print feature_string
+    np_data = numpy.fromstring(feature_string, dtype=float, sep=",")
+    #print np_data
     np_data = np_data.reshape(1,-1)
     '''
     missing_value_model_path = model_path + ".miss_value_model"
@@ -61,9 +62,11 @@ def score_one_iterm_online(model_path,feature_string):
     model_id = model_path[-21:-20]
     output,clf = mexec.applyModel(model_path, np_data, settings.RESULTS_OUTPUT_DIR, settings.MODELS_OUTPUT_DIR + 'test_data.pkl')
     #print np_data
-    score = score_normalization(300,900,output[0][0])
-    score_fixed = cal_real_score(score, model_id)
-    print "returnValue:",score_fixed
+    #score = score_normalization(300,900,output[0][0])
+    score_fixed = score_rescale_by_odd(output[0][0])
+    #score_fixed = cal_real_score(score, model_id)
+    #print "returnValue:",score_fixed
+    #print score_fixed
     logger.info('Finish testing: %s', datetime.datetime.now().time().isoformat())
     return score_fixed
 
@@ -77,11 +80,18 @@ def cal_real_score(score, model_id):
     percentile = stats.percentileofscore(scores_list, score)
     return score_normalization(300, 900, percentile / 100.0)
 
+def score_rescale_by_odd(probability):
+    odd = (1 - probability)/probability
+    max_odd = 19
+    if odd > max_odd:
+        odd = max_odd
+    return (odd * 30 + 300)
+
 
 if __name__ == "__main__":
     model_path = sys.argv[1]
-    score_csv(model_path)
-    sys.exit()
+    #score_csv(model_path)
+    #sys.exit()
     if len(sys.argv) < 3:
        print "error: need 3 arguments"
     else:

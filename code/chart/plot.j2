@@ -6,13 +6,13 @@
     <!-- 引入 echarts.js -->
     <script src="echarts.common.min.js"></script>
     <style type="text/css">
-        .xp{
+        .yp{
           writing-mode:tb-rl;
           float: left;
           position: relative;
           top: 150px;
         }
-        .yp{
+        .xp{
           width: 800px;
           text-align: center;
         }
@@ -23,9 +23,9 @@
 </head>
 <body>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <p class="xp">占违约人群百分比(％)</p>
+    <p class="yp">总客户价值(％)</p>
     <div id="main" style="width: 800px; height: 500px;"></div>
-    <p class="yp">占总人群百分比(％)</p>
+    <p class="xp">高预测价值客户(％)</p>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
