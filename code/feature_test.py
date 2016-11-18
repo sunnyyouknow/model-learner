@@ -46,6 +46,6 @@ if __name__ == "__main__":
        model_path = sys.argv[1]
        json_string = sys.argv[2]
        print "main:",json_string,model_path
-      # Test(model_path)
+       #Test(model_path)
        score = Process(model_path,json_string)
        #print score

@@ -149,6 +149,7 @@ def make_figure_ks(proba_b, y_test, step, path):
 
 def make_chart(proba_b, y_test, step, path):
     plt.figure()
+    print np.sort(proba_b)
     ind = argsort(-np.array(proba_b))
     plot_data = [0]
     for i in range(step, 100 + step, step):
