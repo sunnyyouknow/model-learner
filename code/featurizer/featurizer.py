@@ -42,9 +42,19 @@ def  FeatureDictInit(feature):
     return featureDict
 
 def ProcessFeatureEx(json_string):
-    return ProcessFeature(feature_setting.BankFeatureTitle,
+    split_string = json_string.split('|')
+    if len(split_string) == 4:
+        return ProcessFeature(feature_setting.BankFeatureTitle,
                    feature_setting.YanzhenFeatureTitle, json_string)
-
+    if len(split_string) == 5:
+        feature = ProcessFeature(feature_setting.BankFeatureTitle,
+                   feature_setting.YanzhenFeatureTitle, json_string)
+        feature_c = ProcessCustomedFeature(feature_setting.CustomedFeatureTitle,
+                    split_string[4])
+        feature.extend(feature_c)
+        return feature
+    else:
+        print "ProcessFeatureEx error"
 
 def ProcessFeature(BankFeatureTitle,YanzhenFeatureTitle,json_string):
     bankFeatureDict = FeatureDictInit(BankFeatureTitle)
@@ -53,6 +63,11 @@ def ProcessFeature(BankFeatureTitle,YanzhenFeatureTitle,json_string):
     yanzhen_feature = GetFeatureFromJson(yanzhenDict,json_string.split('|')[3])
     bank_feature.extend(yanzhen_feature)
     return bank_feature
+
+def ProcessCustomedFeature(FeatureTitle,json_string):
+    FeatureDict = FeatureDictInit(FeatureTitle)
+    feature_array = GetFeatureFromJson(FeatureDict,json_string)
+    return feature_array
 
 if __name__ == '__main__':
     test_json = '15995290079|[]|[{"feature":"credittotalchangtimes","value":"4"}, \

@@ -35,7 +35,7 @@ def Test(model_path):
                     {"feature":"assetshortnetgrowth","value":"-6"},{"feature":"debitshortwaves","value":"1"},\
                     {"feature":"creditshortwaves","value":"3"},{"feature":"entershortwaves","value":"-1"}]|\
                     [{"feature":"time_length","value":"3"},{"feature":"expendlevel","value":"3"}]'
-
+    test_json = test_json + '|[{"feature":"Age","value":"3"},{"feature":"DAPPLYTERMINAL","value":"1"}]'
     score = Process(model_path,test_json)
     #print score
 

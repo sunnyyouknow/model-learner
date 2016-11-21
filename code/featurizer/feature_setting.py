@@ -15,4 +15,4 @@ BankFeatureTitle = ['credittotalchangtimes', 'creditexpend',
 
 YanzhenFeatureTitle = ['time_length', 'expendlevel']
 
-ComstomerFeatureTitle = {'ISEX','DAPPLYTERMINAL','IDATACOMPLETIONSCORES','AGE'}
+CustomedFeatureTitle = {'ISEX','DAPPLYTERMINAL','IDATACOMPLETIONSCORES','AGE'}
